@@ -1,0 +1,146 @@
+"use client";
+
+import React from "react";
+
+export default function AnimatedBackground({ isMobile = false }: { isMobile?: boolean }) {
+  // Reduced opacity for mobile
+  const iconOpacity = isMobile ? 0.2 : 0.6;
+  const blobOpacity = isMobile ? 0.1 : 1;
+
+  return (
+    <>
+      <div className="absolute inset-0 overflow-hidden pointer-events-none bg-gradient-to-b from-[#F5F2F8] via-white to-[#E8E0EF]">
+        {/* Enhanced Gradient Blobs - Multiple layers with better animations */}
+        {/* Large primary blob - top right */}
+        <div
+          className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-br rounded-full blur-3xl animate-blob-float"
+          style={{
+            background: `linear-gradient(to bottom right, rgba(208, 196, 226, ${
+              0.3 * blobOpacity
+            }), rgba(47, 60, 150, ${0.2 * blobOpacity}), rgba(208, 196, 226, ${
+              0.25 * blobOpacity
+            }))`,
+          }}
+        />
+
+        {/* Medium blob - bottom left */}
+        <div
+          className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-to-tr rounded-full blur-3xl animate-blob-float-reverse"
+          style={{
+            animationDelay: "1s",
+            background: `linear-gradient(to top right, rgba(47, 60, 150, ${
+              0.25 * blobOpacity
+            }), rgba(208, 196, 226, ${0.2 * blobOpacity}), rgba(47, 60, 150, ${
+              0.3 * blobOpacity
+            }))`,
+          }}
+        />
+
+        {/* Small accent blob - top center */}
+        <div
+          className="absolute top-1/4 left-1/2 w-[300px] h-[300px] bg-gradient-to-br rounded-full blur-3xl animate-blob-pulse"
+          style={{
+            animationDelay: "0.5s",
+            background: `linear-gradient(to bottom right, rgba(208, 196, 226, ${
+              0.2 * blobOpacity
+            }), rgba(208, 196, 226, ${0.25 * blobOpacity}))`,
+          }}
+        />
+
+        {/* Medium blob - center right */}
+        <div
+          className="absolute top-1/2 right-10 w-[350px] h-[350px] bg-gradient-to-bl rounded-full blur-3xl animate-blob-float"
+          style={{
+            animationDelay: "1.5s",
+            background: `linear-gradient(to bottom left, rgba(208, 196, 226, ${
+              0.2 * blobOpacity
+            }), rgba(208, 196, 226, ${0.15 * blobOpacity}), rgba(47, 60, 150, ${
+              0.25 * blobOpacity
+            }))`,
+          }}
+        />
+
+        {/* Small blob - bottom right */}
+        <div
+          className="absolute bottom-20 right-1/4 w-[250px] h-[250px] bg-gradient-to-tr rounded-full blur-3xl animate-blob-float-reverse"
+          style={{
+            animationDelay: "0.8s",
+            background: `linear-gradient(to top right, rgba(208, 196, 226, ${
+              0.25 * blobOpacity
+            }), rgba(47, 60, 150, ${0.3 * blobOpacity}))`,
+          }}
+        />
+
+        {/* Large blob - middle left */}
+        <div
+          className="absolute top-1/4 left-10 w-[500px] h-[500px] bg-gradient-to-br rounded-full blur-3xl animate-blob-float"
+          style={{
+            animationDelay: "2s",
+            background: `linear-gradient(to bottom right, rgba(47, 60, 150, ${
+              0.25 * blobOpacity
+            }), rgba(208, 196, 226, ${0.3 * blobOpacity}), rgba(47, 60, 150, ${
+              0.2 * blobOpacity
+            }))`,
+          }}
+        />
+      </div>
+
+      <style dangerouslySetInnerHTML={{__html: `
+        /* Enhanced blob animations */
+        @keyframes blob-float {
+          0% {
+            transform: translate(0px, 0px) scale(1);
+          }
+          33% {
+            transform: translate(30px, -50px) scale(1.1);
+          }
+          66% {
+            transform: translate(-20px, 20px) scale(0.9);
+          }
+          100% {
+            transform: translate(0px, 0px) scale(1);
+          }
+        }
+
+        @keyframes blob-float-reverse {
+          0% {
+            transform: translate(0px, 0px) scale(1);
+          }
+          33% {
+            transform: translate(-30px, 50px) scale(0.9);
+          }
+          66% {
+            transform: translate(20px, -20px) scale(1.1);
+          }
+          100% {
+            transform: translate(0px, 0px) scale(1);
+          }
+        }
+
+        @keyframes blob-pulse {
+          0%,
+          100% {
+            transform: scale(1);
+            opacity: 0.6;
+          }
+          50% {
+            transform: scale(1.15);
+            opacity: 0.8;
+          }
+        }
+
+        .animate-blob-float {
+          animation: blob-float 20s ease-in-out infinite;
+        }
+
+        .animate-blob-float-reverse {
+          animation: blob-float-reverse 18s ease-in-out infinite;
+        }
+
+        .animate-blob-pulse {
+          animation: blob-pulse 8s ease-in-out infinite;
+        }
+      `}} />
+    </>
+  );
+}
