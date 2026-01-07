@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
+import { ShineBorder } from "@/components/ui/shine-border";
 
 export default function WaitlistForm() {
   const [name, setName] = useState("");
@@ -97,9 +98,15 @@ export default function WaitlistForm() {
     >
       <motion.form
         onSubmit={handleSubmit}
-        className="bg-white/70 backdrop-blur-md rounded-2xl p-8 shadow-xl border border-white/30"
+        className="relative bg-white/70 backdrop-blur-md rounded-2xl p-8 shadow-xl border border-white/30 overflow-hidden"
       >
-        <div className="space-y-6">
+        <ShineBorder
+          className="rounded-2xl"
+          duration={14}
+          shineColor={["#2F3C96", "#D0C4E2", "#253075"]}
+          borderWidth={2}
+        />
+        <div className="relative z-10 space-y-6">
           {/* Name Field */}
           <div>
             <label htmlFor="name" className="block text-sm font-semibold text-[#2F3C96] mb-2">
@@ -168,7 +175,7 @@ export default function WaitlistForm() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.3 }}
-              className={`mt-6 p-4 rounded-xl text-center ${
+              className={`relative z-10 mt-6 p-4 rounded-xl text-center ${
                 status === "success"
                   ? "bg-green-50 text-green-700 border border-green-200"
                   : "bg-red-50 text-red-700 border border-red-200"
