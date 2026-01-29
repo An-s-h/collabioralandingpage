@@ -406,12 +406,7 @@ export default function WaitlistForm() {
 
   return (
     <>
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-2xl mx-auto"
-      >
+      <div className="w-full max-w-2xl mx-auto">
         <motion.form
           onSubmit={handleSubmit}
           className="relative bg-white/70 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/30"
@@ -624,7 +619,7 @@ export default function WaitlistForm() {
             )}
           </AnimatePresence>
         </motion.form>
-      </motion.div>
+      </div>
 
       {/* Portal-based Role Dropdown */}
       {typeof window !== "undefined" &&
