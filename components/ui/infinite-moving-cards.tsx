@@ -44,14 +44,14 @@ export const InfiniteMovingCards = ({
     }
   }
   const getDirection = () => {
-    if (scrollerRef.current) {
+    if (containerRef.current) {
       if (direction === "left") {
-        scrollerRef.current.style.setProperty(
+        containerRef.current.style.setProperty(
           "--animation-direction",
-          "normal",
+          "forwards",
         );
       } else {
-        scrollerRef.current.style.setProperty(
+        containerRef.current.style.setProperty(
           "--animation-direction",
           "reverse",
         );
@@ -76,13 +76,22 @@ export const InfiniteMovingCards = ({
         "scroller relative z-20 max-w-7xl overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)]",
         className,
       )}
+      onMouseEnter={() => {
+        if (pauseOnHover && scrollerRef.current) {
+          scrollerRef.current.style.animationPlayState = "paused";
+        }
+      }}
+      onMouseLeave={() => {
+        if (pauseOnHover && scrollerRef.current) {
+          scrollerRef.current.style.animationPlayState = "running";
+        }
+      }}
     >
       <ul
         ref={scrollerRef}
         className={cn(
           "flex w-max min-w-full shrink-0 flex-nowrap gap-4 py-4",
           start && "animate-scroll",
-          pauseOnHover && "hover:[animation-play-state:paused]",
         )}
       >
         {items.map((item, idx) => (

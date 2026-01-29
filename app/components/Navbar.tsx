@@ -1,24 +1,66 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
+  const isHomePage = pathname === "/";
+  const isOurMissionPage = pathname === "/our-mission";
+  const isHelpfulResourcesPage = pathname === "/helpful-resources";
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setIsScrolled(window.scrollY > 20);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // Smooth scroll handler
   const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
     e.preventDefault();
+    setIsMobileMenuOpen(false);
+    
+    // If not on home page, navigate to home first, then scroll
+    if (!isHomePage) {
+      router.push(`/#${targetId}`);
+      // Wait for navigation and DOM to be ready, then scroll
+      setTimeout(() => {
+        const scrollToElement = () => {
+          const element = document.getElementById(targetId);
+          if (element) {
+            const offset = 80;
+            const elementPosition = element.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - offset;
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: "smooth",
+            });
+          } else {
+            // Retry if element not found yet
+            setTimeout(scrollToElement, 50);
+          }
+        };
+        scrollToElement();
+      }, 200);
+      return;
+    }
+    
+    // If on home page, use normal smooth scroll
     const element = document.getElementById(targetId);
     if (element) {
       const offset = 80; // Account for navbar height
@@ -30,7 +72,6 @@ export default function Navbar() {
         behavior: "smooth",
       });
     }
-    setIsMobileMenuOpen(false);
   };
 
   // Scroll to top handler
@@ -60,50 +101,86 @@ export default function Navbar() {
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="max-w-6xl mx-auto px-8 sm:px-6 lg:px-14"
+          className="max-w-6xl mx-auto py-2 sm:py-0 px-8 sm:px-6 lg:px-14"
         >
           <div className="flex items-center justify-between h-16 sm:h-20">
             {/* Logo - Left Side */}
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex items-center cursor-pointer"
-              onClick={handleScrollToTop}
-            >
+            {isHomePage ? (
               <motion.div
-                animate={{
-                  scale: isScrolled ? 1 : 1.3,
-                }}
-                transition={{
-                  duration: 0.3,
-                  ease: "easeInOut",
-                }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center cursor-pointer"
+                onClick={handleScrollToTop}
               >
-                <Image
-                  src="/logo.png"
-                  alt="Collabiora Logo"
-                  width={160}
-                  height={50}
-                  className={`w-auto transition-all duration-300 ${
-                    isScrolled ? "h-10 sm:h-12" : "h-12 "
-                  }`}
-                  priority
-                />
+                <motion.div
+                  animate={{
+                    scale: isScrolled ? 1 : 1.3,  
+                  }}
+                  transition={{
+                    duration: 0.3,
+                    ease: "easeInOut",
+                  }}
+                >
+                  <Image
+                    src="/logo.png"
+                    alt="Collabiora Logo"
+                    width={160}
+                    height={50}
+                    className={`w-auto transition-all duration-300 ${
+                      isScrolled ? "h-10 sm:h-12" : "h-12 "
+                    }`}
+                    priority
+                  />
+                </motion.div>
               </motion.div>
-            </motion.div>
+            ) : (
+              <Link href="/">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex items-center cursor-pointer"
+                >
+                  <motion.div
+                    animate={{
+                      scale: isScrolled ? 1 : 1.3,  
+                    }}
+                    transition={{
+                      duration: 0.3,
+                      ease: "easeInOut",
+                    }}
+                  >
+                    <Image
+                      src="/logo.png"
+                      alt="Collabiora Logo"
+                      width={160}
+                      height={50}
+                      className={`w-auto transition-all duration-300 ${
+                        isScrolled ? "h-10 sm:h-12" : "h-12 "
+                      }`}
+                      priority
+                    />
+                  </motion.div>
+                </motion.div>
+              </Link>
+            )}
 
             {/* Desktop Navigation - Right Side */}
             <div className="hidden md:flex items-center space-x-4 lg:space-x-6">
               <motion.a
-                href="#our-mission"
-                onClick={(e) => handleSmoothScroll(e, "our-mission")}
+                href="/our-mission"
                 whileHover={{ y: -2 }}
                 whileTap={{ y: 0 }}
-                className="relative text-[#787878] hover:text-[#2F3C96] font-medium text-sm px-4 py-2 rounded-lg hover:bg-[#D0C4E2]/20 transition-all duration-300 group"
+                className={`relative font-medium text-sm px-4 py-2 rounded-lg transition-all duration-300 group ${
+                  isOurMissionPage
+                    ? "text-[#2F3C96] bg-[#D0C4E2]/20"
+                    : "text-[#787878] hover:text-[#2F3C96] hover:bg-[#D0C4E2]/20"
+                }`}
               >
                 Our Mission
                 <motion.span
-                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#2F3C96] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
+                  className={`absolute bottom-0 left-0 right-0 h-0.5 bg-[#2F3C96] transition-transform duration-300 origin-left ${
+                    isOurMissionPage ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                  }`}
                 />
               </motion.a>
               <motion.a
@@ -111,11 +188,32 @@ export default function Navbar() {
                 onClick={(e) => handleSmoothScroll(e, "how-it-works")}
                 whileHover={{ y: -2 }}
                 whileTap={{ y: 0 }}
-                className="relative text-[#787878] hover:text-[#2F3C96] font-medium text-sm px-4 py-2 rounded-lg hover:bg-[#D0C4E2]/20 transition-all duration-300 group"
+                className={`relative font-medium text-sm px-4 py-2 rounded-lg transition-all duration-300 group ${
+                  isHomePage
+                    ? "text-[#787878] hover:text-[#2F3C96] hover:bg-[#D0C4E2]/20"
+                    : "text-[#787878] hover:text-[#2F3C96] hover:bg-[#D0C4E2]/20"
+                }`}
               >
                 How It Works
                 <motion.span
                   className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#2F3C96] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
+                />
+              </motion.a>
+              <motion.a
+                href="/helpful-resources"
+                whileHover={{ y: -2 }}
+                whileTap={{ y: 0 }}
+                className={`relative font-medium text-sm px-4 py-2 rounded-lg transition-all duration-300 group ${
+                  isHelpfulResourcesPage
+                    ? "text-[#2F3C96] bg-[#D0C4E2]/20"
+                    : "text-[#787878] hover:text-[#2F3C96] hover:bg-[#D0C4E2]/20"
+                }`}
+              >
+                Helpful Resources
+                <motion.span
+                  className={`absolute bottom-0 left-0 right-0 h-0.5 bg-[#2F3C96] transition-transform duration-300 origin-left ${
+                    isHelpfulResourcesPage ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                  }`}
                 />
               </motion.a>
               <motion.a
@@ -134,7 +232,7 @@ export default function Navbar() {
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className="md:hidden text-[#2F3C96] p-2 rounded-lg hover:bg-[#D0C4E2]/20 transition-colors relative z-50"
+              className="md:hidden text-[#2F3C96] p-2 rounded-lg hover:bg-[#D0C4E2]/20 transition-colors relative z-50 w-10 h-10 flex items-center justify-center"
               aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             >
               <motion.div
@@ -234,9 +332,13 @@ export default function Navbar() {
                   className="flex flex-col space-y-4"
                 >
                   <a
-                    href="#our-mission"
-                    onClick={(e) => handleSmoothScroll(e, "our-mission")}
-                    className="text-[#2F3C96] font-medium text-lg py-3 px-4 rounded-xl hover:bg-[#D0C4E2]/20 transition-colors"
+                    href="/our-mission"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`font-medium text-lg py-3 px-4 rounded-xl transition-colors ${
+                      isOurMissionPage
+                        ? "text-[#2F3C96] bg-[#D0C4E2]/30"
+                        : "text-[#2F3C96] hover:bg-[#D0C4E2]/20"
+                    }`}
                   >
                     Our Mission
                   </a>
@@ -246,6 +348,17 @@ export default function Navbar() {
                     className="text-[#2F3C96] font-medium text-lg py-3 px-4 rounded-xl hover:bg-[#D0C4E2]/20 transition-colors"
                   >
                     How It Works
+                  </a>
+                  <a
+                    href="/helpful-resources"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`font-medium text-lg py-3 px-4 rounded-xl transition-colors ${
+                      isHelpfulResourcesPage
+                        ? "text-[#2F3C96] bg-[#D0C4E2]/30"
+                        : "text-[#2F3C96] hover:bg-[#D0C4E2]/20"
+                    }`}
+                  >
+                    Helpful Resources
                   </a>
                   <a
                     href="#waitlist"

@@ -18,7 +18,8 @@ export const FollowerPointerCard = ({
   const y = useMotionValue(0);
   const ref = React.useRef<HTMLDivElement>(null);
   const [rect, setRect] = useState<DOMRect | null>(null);
-  const [isInside, setIsInside] = useState<boolean>(false); // Add this line
+  const [isInside, setIsInside] = useState<boolean>(false);
+  const [isScrolling, setIsScrolling] = useState<boolean>(false);
 
   useEffect(() => {
     const updateRect = () => {
@@ -30,13 +31,42 @@ export const FollowerPointerCard = ({
     
     updateRect();
     
+    // Handle scroll events - hide pointer during scroll
+    let scrollTimeout: NodeJS.Timeout;
+    let ticking = false;
+    const handleScroll = () => {
+      setIsScrolling(true);
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        setIsScrolling(false);
+      }, 150);
+      
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateRect();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    
+    let resizeTimeout: NodeJS.Timeout;
+    const handleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        updateRect();
+      }, 150);
+    };
+    
     // Update rect on scroll and resize to handle dynamic positioning
-    window.addEventListener('scroll', updateRect, true);
-    window.addEventListener('resize', updateRect);
+    window.addEventListener('scroll', handleScroll, { passive: true, capture: true });
+    window.addEventListener('resize', handleResize, { passive: true });
     
     return () => {
-      window.removeEventListener('scroll', updateRect, true);
-      window.removeEventListener('resize', updateRect);
+      window.removeEventListener('scroll', handleScroll, true);
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(scrollTimeout);
+      clearTimeout(resizeTimeout);
     };
   }, []);
 
@@ -68,7 +98,7 @@ export const FollowerPointerCard = ({
       className={cn("relative", className)}
     >
       <AnimatePresence>
-        {isInside && <FollowPointer x={x} y={y} title={title} color={color} />}
+        {isInside && !isScrolling && <FollowPointer x={x} y={y} title={title} color={color} />}
       </AnimatePresence>
       {children}
     </div>

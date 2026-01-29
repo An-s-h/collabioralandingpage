@@ -272,14 +272,20 @@ body {
 
 .animate-blob-float {
   animation: blob-float 20s ease-in-out infinite;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .animate-blob-float-reverse {
   animation: blob-float-reverse 18s ease-in-out infinite;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .animate-blob-pulse {
   animation: blob-pulse 8s ease-in-out infinite;
+  will-change: transform, opacity;
+  transform: translateZ(0);
 }
 
 /* Infinite Moving Cards Animation */

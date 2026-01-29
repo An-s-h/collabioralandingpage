@@ -15,6 +15,8 @@ export default function AnimatedBackground({ isMobile = false }: { isMobile?: bo
         <div
           className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-br rounded-full blur-3xl animate-blob-float"
           style={{
+            willChange: 'transform',
+            transform: 'translateZ(0)',
             background: `linear-gradient(to bottom right, rgba(208, 196, 226, ${
               0.3 * blobOpacity
             }), rgba(47, 60, 150, ${0.2 * blobOpacity}), rgba(208, 196, 226, ${
@@ -27,6 +29,8 @@ export default function AnimatedBackground({ isMobile = false }: { isMobile?: bo
         <div
           className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-to-tr rounded-full blur-3xl animate-blob-float-reverse"
           style={{
+            willChange: 'transform',
+            transform: 'translateZ(0)',
             animationDelay: "1s",
             background: `linear-gradient(to top right, rgba(47, 60, 150, ${
               0.25 * blobOpacity
@@ -40,6 +44,8 @@ export default function AnimatedBackground({ isMobile = false }: { isMobile?: bo
         <div
           className="absolute top-1/4 left-1/2 w-[300px] h-[300px] bg-gradient-to-br rounded-full blur-3xl animate-blob-pulse"
           style={{
+            willChange: 'transform, opacity',
+            transform: 'translateZ(0)',
             animationDelay: "0.5s",
             background: `linear-gradient(to bottom right, rgba(208, 196, 226, ${
               0.2 * blobOpacity
@@ -47,42 +53,6 @@ export default function AnimatedBackground({ isMobile = false }: { isMobile?: bo
           }}
         />
 
-        {/* Medium blob - center right */}
-        <div
-          className="absolute top-1/2 right-10 w-[350px] h-[350px] bg-gradient-to-bl rounded-full blur-3xl animate-blob-float"
-          style={{
-            animationDelay: "1.5s",
-            background: `linear-gradient(to bottom left, rgba(208, 196, 226, ${
-              0.2 * blobOpacity
-            }), rgba(208, 196, 226, ${0.15 * blobOpacity}), rgba(47, 60, 150, ${
-              0.25 * blobOpacity
-            }))`,
-          }}
-        />
-
-        {/* Small blob - bottom right */}
-        <div
-          className="absolute bottom-20 right-1/4 w-[250px] h-[250px] bg-gradient-to-tr rounded-full blur-3xl animate-blob-float-reverse"
-          style={{
-            animationDelay: "0.8s",
-            background: `linear-gradient(to top right, rgba(208, 196, 226, ${
-              0.25 * blobOpacity
-            }), rgba(47, 60, 150, ${0.3 * blobOpacity}))`,
-          }}
-        />
-
-        {/* Large blob - middle left */}
-        <div
-          className="absolute top-1/4 left-10 w-[500px] h-[500px] bg-gradient-to-br rounded-full blur-3xl animate-blob-float"
-          style={{
-            animationDelay: "2s",
-            background: `linear-gradient(to bottom right, rgba(47, 60, 150, ${
-              0.25 * blobOpacity
-            }), rgba(208, 196, 226, ${0.3 * blobOpacity}), rgba(47, 60, 150, ${
-              0.2 * blobOpacity
-            }))`,
-          }}
-        />
       </div>
 
       <style dangerouslySetInnerHTML={{__html: `
@@ -131,14 +101,20 @@ export default function AnimatedBackground({ isMobile = false }: { isMobile?: bo
 
         .animate-blob-float {
           animation: blob-float 20s ease-in-out infinite;
+          will-change: transform;
+          transform: translateZ(0);
         }
 
         .animate-blob-float-reverse {
           animation: blob-float-reverse 18s ease-in-out infinite;
+          will-change: transform;
+          transform: translateZ(0);
         }
 
         .animate-blob-pulse {
           animation: blob-pulse 8s ease-in-out infinite;
+          will-change: transform, opacity;
+          transform: translateZ(0);
         }
       `}} />
     </>
