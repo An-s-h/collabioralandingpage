@@ -65,12 +65,13 @@ export default function RootLayout({
           strategy="afterInteractive"
           src={`https://js.hs-scripts.com/${hubspotPortalId}.js`}
         />
-        {/* Viral Loops Widget Loader */}
+        {/* Viral Loops SDK - API Only Mode (no automatic form binding) */}
         <Script
           id="viral-loops-loader"
           strategy="afterInteractive"
           src="https://app.viral-loops.com/widgetsV2/core/loader.js"
           data-campaign-id="nGVsE6bNtXHGQlXj1ykr3BNLwJE"
+          data-vl-disable-void="true"
         />
       </head>
       <body
