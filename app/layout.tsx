@@ -65,12 +65,12 @@ export default function RootLayout({
           strategy="afterInteractive"
           src={`https://js.hs-scripts.com/${hubspotPortalId}.js`}
         />
-        {/* Viral Loops Widget Loader - Exact snippet unchanged as required by documentation */}
-        <script
-          type="text/javascript"
+        {/* Viral Loops Widget Loader */}
+        <Script
+          id="viral-loops-loader"
+          strategy="afterInteractive"
           src="https://app.viral-loops.com/widgetsV2/core/loader.js"
           data-campaign-id="nGVsE6bNtXHGQlXj1ykr3BNLwJE"
-          id="viral-loops-loader"
         />
         <Script
           id="microsoft-clarity"

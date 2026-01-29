@@ -253,14 +253,30 @@ export default function WaitlistForm() {
     role?: string,
     country?: string
   ): Promise<void> => {
-    if (typeof window === "undefined" || !window.ViralLoops || !viralLoopsReady) {
-      console.warn("Viral Loops is not ready yet");
+    if (typeof window === "undefined") {
+      console.warn("Viral Loops: Window is undefined (SSR context)");
+      return;
+    }
+
+    if (!window.ViralLoops) {
+      console.warn("Viral Loops: SDK not loaded yet");
+      return;
+    }
+
+    if (!viralLoopsReady) {
+      console.warn("Viral Loops: SDK not ready yet");
       return;
     }
 
     try {
+      console.log("Viral Loops: Starting registration for", email);
+      
       // Get the campaign (using default campaign ID from layout.tsx)
       const campaign = await window.ViralLoops.getCampaign();
+
+      if (!campaign) {
+        throw new Error("Failed to get Viral Loops campaign");
+      }
 
       // Prepare user data for Viral Loops
       const userData: {
@@ -285,16 +301,21 @@ export default function WaitlistForm() {
         }
       }
 
+      console.log("Viral Loops: Identifying user...");
+      
       // Register user with Viral Loops
       const response = await campaign.identify(userData);
 
+      console.log("Viral Loops: Registration successful!");
+      
       // Optional: You can use the referral code/URLs if needed
       if (response.referralCode) {
         console.log("Viral Loops referral code:", response.referralCode);
       }
     } catch (error) {
       // Log error but don't block form submission
-      console.error("Error registering with Viral Loops:", error);
+      console.error("Viral Loops: Registration error:", error);
+      throw error; // Re-throw so the caller can handle it
     }
   };
 
@@ -331,25 +352,32 @@ export default function WaitlistForm() {
       const data = await response.json();
 
       if (response.ok) {
-        // Register with Viral Loops after successful API submission
-        await registerWithViralLoops(
-          email.trim(),
-          firstName.trim(),
-          lastName.trim(),
-          role || undefined,
-          country || undefined
-        );
-
+        // Set success state FIRST to ensure immediate UI feedback
         setStatus("success");
         setMessage(
           data.alreadyExists
             ? "You're already on our waitlist!"
             : "Successfully added to waitlist!"
         );
+        
         // Trigger confetti on success
         setTimeout(() => {
           triggerConfetti();
         }, 100);
+        
+        // Register with Viral Loops in the background (non-blocking)
+        // This runs asynchronously without blocking the UI
+        registerWithViralLoops(
+          email.trim(),
+          firstName.trim(),
+          lastName.trim(),
+          role || undefined,
+          country || undefined
+        ).catch((error) => {
+          // Silently handle Viral Loops errors - don't affect user experience
+          console.error("Viral Loops registration failed:", error);
+        });
+
         // Clear form fields after showing success message for a bit
         setTimeout(() => {
           setFirstName("");
@@ -442,7 +470,7 @@ export default function WaitlistForm() {
                 required
                 whileFocus={{ scale: 1.01 }}
                 className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[#2F3C96] focus:outline-none text-gray-900 placeholder-gray-400 transition-all text-sm"
-                disabled={status === "loading"}
+                disabled={status === "loading" || status === "success"}
               />
             </div>
 
