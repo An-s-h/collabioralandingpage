@@ -8,7 +8,6 @@ import AnimatedBackground from "./components/AnimatedBackground";
 import HeroSection from "./components/HeroSection";
 import HowItWorksSection from "./components/HowItWorksSection";
 import GetStartedSection from "./components/GetStartedSection";
-import EarlyAccessSection from "./components/EarlyAccessSection";
 import WaitlistSection from "./components/WaitlistSection";
 import TrustedNetworksMarquee from "./components/TrustedNetworksMarquee";
 import ScrollToTop from "./components/ScrollToTop";
@@ -59,9 +58,9 @@ export default function Home() {
     }
   };
 
-  // Handle scroll to early access from banner
+  // Handle scroll to waitlist from banner
   const handleBannerClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    handleSmoothScroll(e, "early-access");
+    handleSmoothScroll(e, "waitlist");
   };
 
   return (
@@ -71,14 +70,13 @@ export default function Home() {
       
       <StickyBanner hideOnScroll={true} className="hidden md:flex bg-gradient-to-r from-[#2F3C96] to-[#1f2859]">
         <a 
-          href="#early-access" 
+          href="#waitlist" 
           onClick={handleBannerClick}
-          
           className="mx-0 max-w-[90%] text-white drop-shadow-md flex items-center gap-2 hover:gap-3 transition-all duration-200 cursor-pointer"
         >
-          <span className="font-semibold">Founding Access Closing Soon</span>
-          <span className="hidden sm:inline">Free lifetime access for top 100 • Beta pricing for first 500</span>
-          <span className="sm:hidden">Free for top 100 • Beta pricing for first 500</span>
+          <span className="font-semibold">Join Our Waitlist</span>
+          <span className="hidden sm:inline">Be among the first to experience Collabiora</span>
+          <span className="sm:hidden">Get early access</span>
           <ArrowRight className="w-4 h-4 inline-flex" />
         </a>
       </StickyBanner>
@@ -90,8 +88,6 @@ export default function Home() {
       <HowItWorksSection />
       <VideoSection />
       <FeaturesCarousel />
-
-      <EarlyAccessSection />
 
       <GetStartedSection />
 

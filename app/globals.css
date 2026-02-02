@@ -345,10 +345,3 @@ body {
     @apply bg-background text-foreground;
   }
 }
-
-/* Prevent Viral Loops from hiding our custom form */
-form[data-vl-action],
-form[data-vl-container] {
-  display: block !important;
-  visibility: visible !important;
-}

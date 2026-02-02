@@ -13,37 +13,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
 
-// Viral Loops TypeScript declarations
-declare global {
-  interface Window {
-    ViralLoops?: {
-      getCampaign: (campaignId?: string) => Promise<ViralLoopsCampaign>;
-      campaigns: Record<string, ViralLoopsCampaign>;
-    };
-  }
-}
-
-interface ViralLoopsCampaign {
-  identify: (user: {
-    email: string;
-    firstname?: string;
-    lastname?: string;
-    extraData?: Record<string, any>;
-  }) => Promise<{
-    referralCode?: string;
-    referralUrls?: Record<string, string>;
-  }>;
-  getReferrer: () => string | null;
-  setReferrer: (referrer: { referralCode: string; refSource?: string }) => void;
-  getRank: () => Promise<number>;
-  getOrder: () => Promise<number>;
-  getUser: () => any;
-  info: any;
-  getPendingRewards: () => Promise<any>;
-  getGivenRewards: () => Promise<any>;
-  logout: () => void;
-}
-
 export default function WaitlistForm() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -57,7 +26,6 @@ export default function WaitlistForm() {
   const [loadingCountries, setLoadingCountries] = useState(true);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
-  const [viralLoopsReady, setViralLoopsReady] = useState(false);
 
   const [roleDropdownRect, setRoleDropdownRect] = useState({
     top: 0,
@@ -69,29 +37,6 @@ export default function WaitlistForm() {
   const roleButtonRef = useRef<HTMLButtonElement>(null);
   const roleDropdownRef = useRef<HTMLDivElement>(null);
   const countrySearchInputRef = useRef<HTMLInputElement>(null);
-
-  // Wait for Viral Loops to be ready
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    // Check if Viral Loops is already loaded
-    if (window.ViralLoops) {
-      setViralLoopsReady(true);
-      return;
-    }
-
-    // Listen for Viral Loops ready event
-    const handleViralLoopsReady = () => {
-      setViralLoopsReady(true);
-    };
-
-    window.addEventListener("vlReady", handleViralLoopsReady);
-
-    // Cleanup
-    return () => {
-      window.removeEventListener("vlReady", handleViralLoopsReady);
-    };
-  }, []);
 
   // Load countries on mount
   useEffect(() => {
@@ -245,80 +190,6 @@ export default function WaitlistForm() {
     return undefined;
   };
 
-  // Helper function to register user with Viral Loops
-  const registerWithViralLoops = async (
-    email: string,
-    firstName: string,
-    lastName: string,
-    role?: string,
-    country?: string
-  ): Promise<void> => {
-    if (typeof window === "undefined") {
-      console.warn("Viral Loops: Window is undefined (SSR context)");
-      return;
-    }
-
-    if (!window.ViralLoops) {
-      console.warn("Viral Loops: SDK not loaded yet");
-      return;
-    }
-
-    if (!viralLoopsReady) {
-      console.warn("Viral Loops: SDK not ready yet");
-      return;
-    }
-
-    try {
-      console.log("Viral Loops: Starting registration for", email);
-      
-      // Get the campaign (using default campaign ID from layout.tsx)
-      const campaign = await window.ViralLoops.getCampaign();
-
-      if (!campaign) {
-        throw new Error("Failed to get Viral Loops campaign");
-      }
-
-      // Prepare user data for Viral Loops
-      const userData: {
-        email: string;
-        firstname?: string;
-        lastname?: string;
-        extraData?: Record<string, any>;
-      } = {
-        email: email.trim(),
-        firstname: firstName.trim(),
-        lastname: lastName.trim(),
-      };
-
-      // Add extra data (role and country) if provided
-      if (role || country) {
-        userData.extraData = {};
-        if (role) {
-          userData.extraData.role = role;
-        }
-        if (country) {
-          userData.extraData.country = country;
-        }
-      }
-
-      console.log("Viral Loops: Identifying user...");
-      
-      // Register user with Viral Loops
-      const response = await campaign.identify(userData);
-
-      console.log("Viral Loops: Registration successful!");
-      
-      // Optional: You can use the referral code/URLs if needed
-      if (response.referralCode) {
-        console.log("Viral Loops referral code:", response.referralCode);
-      }
-    } catch (error) {
-      // Log error but don't block form submission
-      console.error("Viral Loops: Registration error:", error);
-      throw error; // Re-throw so the caller can handle it
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("loading");
@@ -364,19 +235,6 @@ export default function WaitlistForm() {
         setTimeout(() => {
           triggerConfetti();
         }, 100);
-        
-        // Register with Viral Loops in the background (non-blocking)
-        // This runs asynchronously without blocking the UI
-        registerWithViralLoops(
-          email.trim(),
-          firstName.trim(),
-          lastName.trim(),
-          role || undefined,
-          country || undefined
-        ).catch((error) => {
-          // Silently handle Viral Loops errors - don't affect user experience
-          console.error("Viral Loops registration failed:", error);
-        });
 
         // Clear form fields after showing success message for a bit
         setTimeout(() => {
