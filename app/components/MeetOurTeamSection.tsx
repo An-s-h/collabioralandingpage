@@ -83,7 +83,7 @@ export default function MeetOurTeamSection() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="w-full flex flex-col"
               >
-                <div className="bg-white/70 backdrop-blur-md rounded-xl p-5 sm:p-6 shadow-lg border border-white/30 hover:shadow-2xl transition-all duration-300 overflow-hidden h-full flex flex-col">
+                <div className="bg-white/70 backdrop-blur-md rounded-xl p-4 sm:p-5 shadow-lg border border-white/30 hover:shadow-2xl transition-all duration-300 overflow-hidden h-full flex flex-col max-w-xs mx-auto">
                   {/* Gradient overlay on hover */}
                   <div className="absolute inset-0 bg-gradient-to-br from-[#D0C4E2]/0 to-[#2F3C96]/0 group-hover:from-[#D0C4E2]/10 group-hover:to-[#2F3C96]/10 transition-all duration-300 rounded-xl"></div>
 
