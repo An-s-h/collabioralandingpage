@@ -40,12 +40,12 @@ export default function MeetOurTeamSection() {
       description: "Policy advisor and researcher dedicated to bridging science and public understanding",
       image: "/Esther.png",
     },
-    {
-      name: "Bhavya Bansal",
-      role: "CTO",
-      description: "Technology leader dedicated to building scalable and reliable digital platforms.",
-      image: "/Bhavya.jpg",
-    },
+    // {
+    //   name: "Bhavya Bansal",
+    //   role: "CTO",
+    //   description: "Technology leader dedicated to building scalable and reliable digital platforms.",
+    //   image: "/Bhavya.jpg",
+    // },
     {
       name: "Ansh Chachra",
       role: "Full Stack Developer",
