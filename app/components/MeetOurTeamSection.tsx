@@ -71,7 +71,7 @@ export default function MeetOurTeamSection() {
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 items-stretch">
+        <div className="grid sm:grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 items-stretch">
           {teamMembers.map((member, index) => {
             // Assign specific colors to each card: Yellow, Gray, Red, Cyan
             const colors = ["#eab308", "#737373", "#ef4444", "#06b6d4"];
