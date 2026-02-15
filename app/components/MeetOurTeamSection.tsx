@@ -36,16 +36,16 @@ export default function MeetOurTeamSection() {
     },
     {
       name: "Esther Feldman",
-      role: "Co-Founder and COO",
+      role: "Co-Founder and CCO",
       description: "Policy advisor and researcher dedicated to bridging science and public understanding",
       image: "/Esther.png",
     },
-    // {
-    //   name: "Bhavya Bansal",
-    //   role: "CTO",
-    //   description: "Technology leader dedicated to building scalable and reliable digital platforms.",
-    //   image: "/Bhavya.jpg",
-    // },
+    {
+      name: "Bhavya Bansal",
+      role: "CTO",
+      description: "Technology leader dedicated to building scalable and reliable digital platforms.",
+      image: "/Bhavya.jpg",
+    },
     {
       name: "Ansh Chachra",
       role: "Full Stack Developer",
@@ -71,7 +71,7 @@ export default function MeetOurTeamSection() {
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 items-stretch">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 items-stretch">
           {teamMembers.map((member, index) => {
             // Assign specific colors to each card: Yellow, Gray, Red, Cyan
             const colors = ["#eab308", "#737373", "#ef4444", "#06b6d4"];
@@ -83,7 +83,7 @@ export default function MeetOurTeamSection() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="w-full flex flex-col"
               >
-                <div className="bg-white/70 backdrop-blur-md rounded-xl p-4 sm:p-5 shadow-lg border border-white/30 hover:shadow-2xl transition-all duration-300 overflow-hidden h-full flex flex-col max-w-xs mx-auto">
+                <div className="bg-white/70 backdrop-blur-md rounded-xl p-5 sm:p-6 shadow-lg border border-white/30 hover:shadow-2xl transition-all duration-300 overflow-hidden h-full flex flex-col">
                   {/* Gradient overlay on hover */}
                   <div className="absolute inset-0 bg-gradient-to-br from-[#D0C4E2]/0 to-[#2F3C96]/0 group-hover:from-[#D0C4E2]/10 group-hover:to-[#2F3C96]/10 transition-all duration-300 rounded-xl"></div>
 
